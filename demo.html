@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>文件上传与编辑</title>
+	<meta name="viewport" content="width=device-width,initial-scale=1.0" />
+</head>
+<body>
+    <form id="the_form" action="recv.php">
+        <input type="text" name="name" value="lhuap" />
+        <input type="text" name="email" value="977466652@qq.com" />
+        <input type="file" name="files[]" multiple />
+    </form>
+    <button onclick="javascript:submit()">提交</button>
+
+    <script type="text/javascript" src="js/FileManager.js?v=3"></script>
+    <script type="text/javascript">
+        var filemgr = null;
+        function submit(){
+            // var uploader = new FileUploader({
+            //     chunk_size          :   1024*1024,
+            //     onBeforeUpload      :   onBeforeUpload,
+            //     onUploadProgress    :   onUploadProgress,
+            //     onFileUploaded      :   onFileUploaded,
+            //     onUploadError       :   onUploadError,
+            // });
+
+            if(!filemgr){
+                filemgr = new FileManager({
+                    cmd_opts    :   {
+                        name    :   "lhuap",
+                    },
+                    onCommandComplete   :   onCommandComplete,
+                });
+            }
+            filemgr.cwd("abc");
+            
+            //filemgr.list("");
+            //filemgr.exist("abc/yichun01.jpg");
+            //filemgr.rmdir("abc");
+            //filemgr.mkdir("abc/1/2/3")
+            //filemgr.rename("abc", "def");
+            var elem = document.querySelector("#the_form input[type='file']");
+            var uploader = filemgr.uploader();
+            uploader.addFile(elem);
+            uploader.execute("start", "");
+        }
+
+        function onCommandComplete(cmd, status, result){
+            console.log(result);
+        }
+
+        function onBeforeUpload(up, file){
+            var params = {
+                "name" : $("#the_form input[name='name']").val(),
+                "email" : $("#the_form input[name='email']").val(),
+            };
+            return params;
+        }
+        function onUploadProgress(up, file, params){
+            console.log("onUploadProgress");
+        }
+        function onFileUploaded(up, file, params){
+            console.log("onFileUploaded");
+        }
+        function onUploadError(up, file, status, error, params){
+            console.log("onUploadError");
+        }
+
+        function onComplete(evt){
+            console.log(evt);
+        }
+        function onError(){
+            console.log(evt);
+        }
+    </script>
+</body>
+</html>
